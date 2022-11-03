@@ -3,7 +3,7 @@ from rest_framework import serializers
 from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 
-from reviews.models import Title, Review, Comment
+from reviews.models import Title, Review, Comment, Category, Genre
 from users.models import User
 
 

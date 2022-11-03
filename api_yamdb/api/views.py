@@ -1,10 +1,20 @@
+import uuid
+
+from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
-from rest_framework import viewsets
+from rest_framework import viewsets, status, filters
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
 
-from reviews.models import Review, Title
+from reviews.models import Review, Title, Category, Genre
+from users.models import User
 
-from .permissions import (IsAdminModeratorOwnerOrReadOnly)
-from .serializers import (ReviewSerializer, CommentSerializer)
+from .permissions import (IsAdminModeratorOwnerOrReadOnly, IsAdmin)
+from .serializers import (ReviewSerializer, CommentSerializer, SendCodeSerializer, LogInSerializer, AdminUserSerializer,
+                          UserSerializer, CategorySerializer, GenreSerializer, TitleSerializerForView,
+                          TitleSerializerForWrite)
 
 from .permissions import (IsAdminOrReadOnly)
 from .mixins import CreateListDeleteViewSet
