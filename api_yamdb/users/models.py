@@ -1,6 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from .validators import username_me, UsernameRegexValidator
+from .validators import UsernameRegexValidator, username_me
 
 
 class User(AbstractUser):
