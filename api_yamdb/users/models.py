@@ -1,6 +1,41 @@
+from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from .validators import UsernameRegexValidator, username_me
+
+
+class UserManager(BaseUserManager):
+    """Переопределение базового юзера"""
+
+    def create_user(self, email, username, **extra_fields):
+        if not email:
+            raise ValueError('Enter your email')
+        if not username:
+            raise ValueError('Enter your username')
+        user = self.model(
+            email=self.normalize_email(email),
+            username=username,
+            **extra_fields
+        )
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, username, password, **extra_fields):
+        if not email:
+            raise ValueError('Enter your email')
+        if not username:
+            raise ValueError('Enter your username')
+        user = self.model(
+            email=self.normalize_email(email),
+            username=username,
+            is_staff=True,
+            is_superuser=True,
+            **extra_fields
+        )
+
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
 
 
 class User(AbstractUser):
