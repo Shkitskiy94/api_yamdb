@@ -5,13 +5,13 @@ from .validators import UsernameRegexValidator, username_me
 
 
 class UserManager(BaseUserManager):
-    """Переопределение базового юзера"""
+    """Переопределение базового менеджера user"""
 
     def create_user(self, email, username, **extra_fields):
         if not email:
-            raise ValueError('Enter your email')
+            raise ValueError('Введите ваш email')
         if not username:
-            raise ValueError('Enter your username')
+            raise ValueError('Введите ваше имя пользователя')
         user = self.model(
             email=self.normalize_email(email),
             username=username,
@@ -22,9 +22,9 @@ class UserManager(BaseUserManager):
 
     def create_superuser(self, email, username, password, **extra_fields):
         if not email:
-            raise ValueError('Enter your email')
+            raise ValueError('Введите ваш email')
         if not username:
-            raise ValueError('Enter your username')
+            raise ValueError('Введите ваше имя пользователя')
         user = self.model(
             email=self.normalize_email(email),
             username=username,
@@ -73,6 +73,11 @@ class User(AbstractUser):
         max_length=254,
         unique=True,
         verbose_name='Адрес электронной почты'
+    )
+    confirmation_code = models.UUIDField(
+        verbose_name='Confirmation code',
+        default=0,
+        editable=False,
     )
 
     @property
