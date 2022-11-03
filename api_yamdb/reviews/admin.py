@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from reviews.models import Review, Comment
+from reviews.models import Review, Comment, Category, Genre, Title
 
 
 @admin.register(Review)
@@ -28,3 +28,8 @@ class CommentAdmin(admin.ModelAdmin):
     search_fields = ('review',)
     list_filter = ('review',)
     empty_value_display = '-пусто-'
+   
+
+admin.site.register(Title)
+admin.site.register(Category)
+admin.site.register(Genre)
