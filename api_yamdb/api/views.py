@@ -6,7 +6,7 @@ from rest_framework import viewsets, status, filters
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework_simplejwt import tokens
+import rest_framework_simplejwt
 
 from reviews.models import Review, Title, Category, Genre
 from users.models import User
@@ -58,7 +58,8 @@ def get_token(request):
         confirmation_code = serializer.data.get('confirmation_code')
         user = get_object_or_404(User, username=username)
         if confirmation_code == str(user.confirmation_code):
-            token = tokens.RefreshToken.for_user(user)
+            token = rest_framework_simplejwt.tokens.RefreshToken.\
+                for_user(user)
             return Response({f'Your token: {token.access_token}'},
                             status=status.HTTP_200_OK)
         return Response('Wrong code',
