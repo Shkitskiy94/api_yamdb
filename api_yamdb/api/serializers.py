@@ -160,7 +160,7 @@ class TitleSerializerForView(serializers.ModelSerializer):
         )
         model = Title
         read_only_fields = ('id', 'rating')
-    
+
     def get_avg_rating(self, obj):
         rating = obj.reviews.all().aggregate(Avg('score'))
         return rating
