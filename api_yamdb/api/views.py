@@ -12,9 +12,11 @@ from reviews.models import Review, Title, Category, Genre
 from users.models import User
 
 from .permissions import (IsAdminModeratorOwnerOrReadOnly, IsAdmin)
-from .serializers import (ReviewSerializer, CommentSerializer, SendCodeSerializer, LogInSerializer, AdminUserSerializer,
-                          UserSerializer, CategorySerializer, GenreSerializer, TitleSerializerForView,
-                          TitleSerializerForWrite)
+from .serializers import (ReviewSerializer, CommentSerializer,
+                          SendCodeSerializer, LogInSerializer,
+                          AdminUserSerializer, UserSerializer,
+                          CategorySerializer, GenreSerializer,
+                          TitleSerializerForView, TitleSerializerForWrite)
 
 from .permissions import (IsAdminOrReadOnly)
 from .mixins import CreateListDeleteViewSet
@@ -98,7 +100,6 @@ class UserInfo(APIView):
                         status=status.HTTP_401_UNAUTHORIZED)
 
 
-
 class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
     permission_classes = (IsAdminModeratorOwnerOrReadOnly)
@@ -138,10 +139,12 @@ class CategoryViewSet(CreateListDeleteViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
+
 class GenreViewSet(CreateListDeleteViewSet):
     """Класс представления жанров."""
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
+
 
 class TitleViewSet(viewsets.ModelViewSet):
     """Класс представления произведений."""

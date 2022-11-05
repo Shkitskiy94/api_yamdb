@@ -3,6 +3,7 @@ from django.db import models
 
 from .validators import year_validator
 
+
 class User(models.Model):
     pass
 
