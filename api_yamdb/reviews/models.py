@@ -1,11 +1,8 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
+from users.models import User
 from .validators import year_validator
-
-
-class User(models.Model):
-    pass
 
 
 class Category(models.Model):
