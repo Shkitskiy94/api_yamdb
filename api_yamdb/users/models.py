@@ -1,41 +1,9 @@
-from django.contrib.auth.base_user import BaseUserManager
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils.translation import gettext_lazy as _
+
 from .validators import UsernameRegexValidator, username_me
-
-
-class UserManager(BaseUserManager):
-    """Переопределение базового менеджера user"""
-
-    def create_user(self, email, username, **extra_fields):
-        if not email:
-            raise ValueError('Введите ваш email')
-        if not username:
-            raise ValueError('Введите ваше имя пользователя')
-        user = self.model(
-            email=self.normalize_email(email),
-            username=username,
-            **extra_fields
-        )
-        user.save(using=self._db)
-        return user
-
-    def create_superuser(self, email, username, password, **extra_fields):
-        if not email:
-            raise ValueError('Введите ваш email')
-        if not username:
-            raise ValueError('Введите ваше имя пользователя')
-        user = self.model(
-            email=self.normalize_email(email),
-            username=username,
-            is_staff=True,
-            is_superuser=True,
-            **extra_fields
-        )
-
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
 
 
 class User(AbstractUser):
@@ -43,42 +11,40 @@ class User(AbstractUser):
     USER = 'user'
     MODERATOR = 'moderator'
     ADMIN = 'admin'
+
     CHOICES_ROLE = (
         (USER, 'Пользователь'),
         (MODERATOR, 'Модератор'),
-        (ADMIN, 'Админ'),
+        (ADMIN, 'Администратор'),
     )
     username_validator = UsernameRegexValidator()
     username = models.CharField(
-        max_length=30,
+        'Логин',
+        max_length=settings.LIMIT_USERNAME,
         unique=True,
-        help_text='Набор символов не более 30.'
-                  'Только буквы, цифры и @/./+/-/_',
+        help_text=_(
+            'Набор символов не более 150.'
+            'Только буквы, цифры и @/./+/-/_',
+        ),
         validators=[username_validator, username_me],
         error_messages={
-            'unique': "Пользователь с таким именем уже существует!",
+            'unique': _("Пользователь с таким именем уже существует!"),
         },
     )
-    bio = models.TextField(
-        blank=True,
-        verbose_name='Биография',
-    )
+    first_name = models.CharField(
+        'Имя', max_length=settings.LIMIT_USERNAME, blank=True)
+    bio = models.TextField('Биография', blank=True)
     role = models.CharField(
-        max_length=16,
-        choices=CHOICES_ROLE,
-        default='user',
-        verbose_name='Роль',
-    )
-    email = models.EmailField(
-        max_length=254,
-        unique=True,
-        verbose_name='Адрес электронной почты'
-    )
-    confirmation_code = models.UUIDField(
-        verbose_name='Confirmation code',
-        default=0,
-        editable=False,
-    )
+        'Роль пользователя',
+        default=USER,
+        max_length=max(len(role) for role, _ in CHOICES_ROLE),
+        choices=CHOICES_ROLE)
+    email = models.EmailField('E-mail пользователя',
+                              unique=True, max_length=settings.LIMIT_EMAIL)
+
+    @property
+    def is_user(self):
+        return self.role == self.USER
 
     @property
     def is_moderator(self):
@@ -86,12 +52,16 @@ class User(AbstractUser):
 
     @property
     def is_admin(self):
-        return self.role == self.ADMIN
-
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+        return self.role == self.ADMIN or self.is_superuser or self.is_staff
 
     class Meta:
-        ordering = ['id']
-        verbose_name = 'Пользователи'
+        verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
+        ordering = ('id',)
+        constraints = [
+            models.CheckConstraint(
+                check=~models.Q(username='me'), name='name_not_me')
+        ]
+
+    def __str__(self):
+        return self.username

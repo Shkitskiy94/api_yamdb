@@ -1,35 +1,30 @@
 from django.contrib import admin
 
-from reviews.models import Review, Comment, Category, Genre, Title
+from .models import Category, Comments, Genre, Review, Title
 
 
-@admin.register(Review)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'slug')
+
+
+class CommentsAdmin(admin.ModelAdmin):
+    list_display = ('id', 'text', 'pub_date', 'author', 'review')
+
+
+class GenreAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'slug')
+
+
+class TitleAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'year', 'description', 'category')
+
+
 class ReviewAdmin(admin.ModelAdmin):
-    list_display = (
-        'title',
-        'author',
-        'text',
-        'score',
-        'pub_date',
-    )
-    search_fields = ('pub_date',)
-    list_filter = ('pub_date',)
-    empty_value_display = '-пусто-'
+    list_display = ('id', 'text', 'author', 'score', 'pub_date')
 
 
-@admin.register(Comment)
-class CommentAdmin(admin.ModelAdmin):
-    list_display = (
-        'review',
-        'author',
-        'text',
-        'pub_date',
-    )
-    search_fields = ('review',)
-    list_filter = ('review',)
-    empty_value_display = '-пусто-'
-
-
-admin.site.register(Title)
-admin.site.register(Category)
-admin.site.register(Genre)
+admin.site.register(Category, CategoryAdmin)
+admin.site.register(Genre, GenreAdmin)
+admin.site.register(Title, TitleAdmin)
+admin.site.register(Review, ReviewAdmin)
+admin.site.register(Comments, CommentsAdmin)
