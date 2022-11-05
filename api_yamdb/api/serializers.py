@@ -1,3 +1,5 @@
+import datetime
+
 from django.db.models import Avg
 from rest_framework import serializers
 from django.core.exceptions import ValidationError
@@ -105,6 +107,7 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = '__all__'
         model = Comment
 
+
 class CategorySerializer(serializers.ModelSerializer):
     """Сериализатор категорий."""
     class Meta:
@@ -120,7 +123,7 @@ class GenreSerializer(serializers.ModelSerializer):
 
 
 class TitleSerializerForWrite(serializers.ModelSerializer):
-    """Сериализатора для добавления,изменения,удаления произведений."""
+    """Сериализатора для добавления, изменения,удаления произведений."""
     category = serializers.SlugRelatedField(
         queryset=Category.objects.all(),
         slug_field='slug'
@@ -130,10 +133,11 @@ class TitleSerializerForWrite(serializers.ModelSerializer):
         slug_field='slug',
         many=True
     )
+
     class Meta:
         fields = '__all__'
         model = Title
-    
+
     def year_validator(value):
         """Валидация даты."""
         if value < 1900 or value > datetime.datetime.now().year:
@@ -141,6 +145,7 @@ class TitleSerializerForWrite(serializers.ModelSerializer):
                 ('%(value)s is not a correct year!'),
                 params={'value': value},
             )
+
 
 class TitleSerializerForView(serializers.ModelSerializer):
     """Сериализатора для обзора произведений."""

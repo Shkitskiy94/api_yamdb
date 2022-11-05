@@ -4,9 +4,9 @@ from .permissions import IsAdminOrReadOnly
 
 
 class CreateListDeleteViewSet(mixins.CreateModelMixin,
-                          mixins.ListModelMixin,
-                          mixins.DestroyModelMixin,
-                          viewsets.GenericViewSet):
+                              mixins.ListModelMixin,
+                              mixins.DestroyModelMixin,
+                              viewsets.GenericViewSet):
     """Кастомный вьюсет для создания, возвращения и удаления объектов."""
     permission_classes = (IsAdminOrReadOnly,)
     filter_backends = (filters.SearchFilter,)
