@@ -4,7 +4,7 @@ from django.core.mail import send_mail
 from django.db import IntegrityError
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
-from rest_framework import filters, mixins, status, viewsets
+from rest_framework import filters, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -148,4 +148,3 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user, review=self.get_review())
-

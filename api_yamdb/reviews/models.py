@@ -122,4 +122,3 @@ class Comments(AbstractModelReviewComments):
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
         default_related_name = "comments"
-
