@@ -1,89 +1,92 @@
-Project YaMDb
+# YaMDb | REST API Service 
 
-YaMDb Project
+### Описание:
+Проект YaMDb собирает отзывы пользователей на фильмы, музыку, книги (произведения)
 
-The YaMDb project collects user reviews.
+Пользователя могут публиковать отзывы на произведения, оценивать их (по шкале от 1 до 10), и обсуждать отзывы в комментариях
 
-There are different categories like: "Books", "Films", "Music".
+Средний рейтинг каждого произведения рассчитывается автоматически
 
-The list of categories (Category) can be expanded (for example, you can add the category "Fine Arts" or "Jewelry").
+Список категорий и жанров определен администратором, но может быть расширен в будущем.
 
-The works themselves are not stored in YaMDb; you cannot watch a movie or listen to music here.
+### Ключевые особенности:
+- Регистрация пользователей происходит путем отправки проверочного кода на e-mail
+- Кастомные пользовательские роли: пользователь, модератор, админ
+- Кастомная фильтрация по жанру и категориям
+- Кастомная аутентификация по JWT токену
 
-**API YaMDb Resources **
+## Технологии и библиотеки:
+- [Python](https://www.python.org/);
+- [Django](https://www.djangoproject.com);
+- [SQLite3](https://www.sqlite.org/index.html);
+- [Simple-JWT](https://django-rest-framework-simplejwt.readthedocs.io/en/latest/);
+- [Django REST Framework](https://www.django-rest-framework.org).
 
-YaMDb API Resources
+### Как запустить проект:
 
-USERS: users.
+Клонируйте репозиторий:
+```
+git clone git@github.com:Shkitskiy94/api_yamdb.git
+```
 
-TITLES: titles that are being reviewed (a specific movie, book or song).
+Измените свою текущую рабочую дерикторию:
+```
+cd /api_yamdb/
+```
 
-CATEGORIES: categories (types) of works ("Films", "Books", "Music").
+Создайте и активируйте виртуальное окружение (версия Python 3.7.9)
 
-GENRES: genres of works. One work can be linked to several genres.
+```
+python -3.7 -m venv venv
+```
 
-REVIEWS: reviews of works. The review is tied to a specific work.
+```
+source venv/scripts/activate
+```
 
-COMMENTS: Comments on reviews. The comment is linked to a specific review.
+Обновите pip:
+```
+python3 -m pip install --upgrade pip
+```
 
-User registration algorithm
+Установите зависимости из requirements.txt:
 
-The user sends a POST request with the parameters username and email to / api / v1 / auth / email /
-
-Yamdb sends an email with a confirmation code to the entered email address.
-
-The user sends a POST request with the parameters username and confirmation_code (received by mail) to / api / v1 / auth / token /
-
-In response to the request, he receives a token (JWT token). These operations are performed once, when a user is registered.
-
-As a result, the user receives a token and can work with the API, sending this token with each request.Для обновления токена, нужно отправить повторный запрос на /api/v1/auth/email/ со своими username и email
-
-User Roles:
-
-Anonymous - can view descriptions of works, read reviews and comments.
-
-Authenticated user (user) - can read everything, like Anonymous, additionally can publish reviews and rate works (films / books / songs), can comment on other people's reviews and rate them; can edit and delete their reviews and comments.
-
-Moderator (moderator) - the same rights as the Authenticated user, plus the right to delete and edit any reviews and comments.
-
-Administrator (admin) - full rights to manage the project and all its contents. Can create and delete works, categories and genres. Can assign roles to users.
-
-_Superuser _ - the same rights as the Administrator, except that even if he changes the role to user, he will retain administrator rights
-
-How to install: **
-Clone the repository.
-
-Create a virtual environment python -m venv venv in the main project folder
-
-Activate virtual environment
-
-Windows: source venv \ scripts \ activate
-Linux / Mac: source venv / bin / activate
-Install the requirements with python -m pip install -r requirements.txt
-
-Perform migrations to the database:
-
-python manage.py makemigrations python manage.py migrate
-
-Run the project with the command: python manage.py runserver
-
-Как запустить проект:
-Клонировать репозиторий и перейти в него в командной строке:
-
-git clone https://github.com/Shkitskiy94/api_final_yatube.git
-cd api_final_yatube
-Cоздать и активировать виртуальное окружение:
-
-python -m venv venv
-source venv/bin/activate
-python -m pip install --upgrade pip
-Установить зависимости из файла requirements.txt:
-
+```
 pip install -r requirements.txt
-Выполнить миграции:
+```
 
-cd yatube_api
+Создайте миграции:
+
+```
 python manage.py migrate
-Запустить проект:
+```
+Запустите сервер:
 
+```
 python manage.py runserver
+```
+Полная документация прокта (redoc) доступна по адресу http://127.0.0.1:8000/redoc/
+
+
+### Как зарегистрировать пользователя
+1. Сделайте POST запрос, укаказав в теле "username" и "email" на эндпоинт "api/v1/auth/signup/"
+2. YaMDb отправит проверочный код на указанный email 
+3. Сделайте POST запрос указав "email" и "confirmation_code" в теле запроса на эндпоинт  "api/v1/auth/token/"/,в ответе вы получите JWT-токен
+
+
+### API YaMDb ресурсы:
+- AUTH: Аутентификация.
+- USERS: Регистрация пользователей/редактирование информации
+- TITLES: Произведения и информация о них
+- CATEGORIES: Категории произведений (фильмы, музыка, книги)
+- GENRES: Жанры. Одно произведение может иметь несколько жанров
+- REVIEWS: Отзывы на произведения. Каждый отзыв относится к определенному произведению.
+- COMMENTS: Комментарии к отзывам на произведения.
+
+
+### Авторы (команда проекта "Dream Team"):
+- [Шкитский Юрий](https://github.com/Shkitskiy94/api_final_yatube.git) (Тим-лид, разработчик) 
+
+- [Полина Горшкова](https://github.com/pgorshkova) (разработчик)
+
+- [Вячеслав Поликарский](https://github.com/slava512mb) (разработчик)
