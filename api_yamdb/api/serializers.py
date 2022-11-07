@@ -17,8 +17,21 @@ class SignUpSerializer(serializers.Serializer):
                                       regex=r'^[\w.@+-]+\Z', required=True)
     email = serializers.EmailField(required=True)
 
+    def validate_email(self, value):
+        if User.objects.filter(email__iexact=value).exists():
+            raise ValidationError(
+                'Пользователь с таким email уже существует.'
+            )
+
+        return value
+
     def validate_username(self, value):
-        return username_me(value)
+        if value == 'me':
+            raise ValidationError(
+                'Запрещено использовать "me" в качестве имени пользователя'
+            )
+
+        return value
 
 
 class TokenRegSerializer(serializers.Serializer):
