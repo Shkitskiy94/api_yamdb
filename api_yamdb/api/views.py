@@ -1,16 +1,16 @@
-from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.db import IntegrityError
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from rest_framework import filters, status, viewsets
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from api_yamdb import settings
 from .filters import TitleFilter
 from .mixins import AdminViewSet
 from .permissions import (IsAdmin, IsAdminOrReadOnly,
@@ -26,29 +26,30 @@ from reviews.models import Category, Genre, Review, Title
 from users.models import User
 
 
-class SignUpApiView(APIView):
-    """View для авторизации пользователей"""
-    def post(self, request):
-        serializer = SignUpSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        try:
-            username = serializer.validated_data.get('username')
-            email = serializer.validated_data.get('email')
-            user, _ = User.objects.get_or_create(
-                username=username,
-                email=email
-            )
-        except IntegrityError:
-            return Response('Это имя или email уже занято',
-                            status.HTTP_400_BAD_REQUEST)
-        code = default_token_generator.make_token(user)
-        send_mail(
-            'Код токена',
-            f'Код для получения токена {code}',
-            settings.DEFAULT_FROM_EMAIL,
-            [serializer.validated_data.get('email')]
+@api_view(['POST'])
+def signup(request):
+    """View для авторизации пользователей.
+    Ограничения по пермишенам (для всех доступно)"""
+    serializer = SignUpSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    try:
+        username = serializer.validated_data.get('username')
+        email = serializer.validated_data.get('email')
+        user, _ = User.objects.get_or_create(
+            username=username,
+            email=email
         )
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    except IntegrityError:
+        return Response('Это имя или email уже занято',
+                        status.HTTP_400_BAD_REQUEST)
+    code = default_token_generator.make_token(user)
+    send_mail(
+        'Код токена',
+        f'Код для получения токена {code}',
+        settings.DEFAULT_FROM_EMAIL,
+        [serializer.validated_data.get('email')]
+    )
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class TokenRegApiView(APIView):

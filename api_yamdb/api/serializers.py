@@ -13,9 +13,21 @@ from users.validators import username_me
 
 class SignUpSerializer(serializers.ModelSerializer):
 
-    class Meta:
-        model = User
-        fields = ('email', 'username')
+    def validate_email(self, value):
+        if User.objects.filter(email__iexact=value).exists():
+            raise ValidationError(
+                'Пользователь с таким email уже существует.'
+            )
+
+        return value
+
+    def validate_username(self, value):
+        if value == 'me':
+            raise ValidationError(
+                'Запрещено использовать "me" в качестве имени пользователя'
+            )
+
+        return value
 
 
 class TokenRegSerializer(serializers.Serializer):
