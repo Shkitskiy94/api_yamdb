@@ -28,7 +28,8 @@ from users.models import User
 
 @api_view(['POST'])
 def signup(request):
-    """View для авторизации пользователей."""
+    """View для авторизации пользователей.
+    Ограничения по пермишенам (для всех доступно)"""
     serializer = SignUpSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     try:
