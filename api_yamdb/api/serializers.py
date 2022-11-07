@@ -162,7 +162,6 @@ class ReviewSerializer(serializers.ModelSerializer):
             raise ValidationError('Может существовать только один отзыв!')
         return data
 
-
     class Meta:
         model = Review
         fields = ('id', 'text', 'author', 'score', 'pub_date')
