@@ -33,6 +33,7 @@ class SignUpSerializer(serializers.Serializer):
 
         return value
 
+
 class TokenRegSerializer(serializers.Serializer):
     """Serializer для токенов"""
     username = serializers.RegexField(max_length=settings.LIMIT_USERNAME,
