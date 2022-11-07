@@ -11,11 +11,7 @@ from users.models import User
 from users.validators import username_me
 
 
-class SignUpSerializer(serializers.Serializer):
-    """Serializer для входа"""
-    username = serializers.RegexField(max_length=settings.LIMIT_USERNAME,
-                                      regex=r'^[\w.@+-]+\Z', required=True)
-    email = serializers.EmailField(required=True)
+class SignUpSerializer(serializers.ModelSerializer):
 
     def validate_email(self, value):
         if User.objects.filter(email__iexact=value).exists():
