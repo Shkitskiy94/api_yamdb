@@ -15,13 +15,6 @@
 - Кастомная фильтрация по жанру и категориям
 - Кастомная аутентификация по JWT токену
 
-## Технологии и библиотеки:
-- [Python](https://www.python.org/);
-- [Django](https://www.djangoproject.com);
-- [SQLite3](https://www.sqlite.org/index.html);
-- [Simple-JWT](https://django-rest-framework-simplejwt.readthedocs.io/en/latest/);
-- [Django REST Framework](https://www.django-rest-framework.org).
-
 ### Как запустить проект:
 
 Клонируйте репозиторий:
