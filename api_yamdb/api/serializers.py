@@ -140,7 +140,7 @@ class TitlePostSerialzier(serializers.ModelSerializer):
 
 
 class ReviewSerializer(serializers.ModelSerializer):
-    """Serializer для отзывов и оценок"""
+    """Serializer для отзывов и оценок."""
     author = serializers.SlugRelatedField(
         read_only=True,
         slug_field='username'

@@ -48,7 +48,7 @@ def signup(request):
 
 
 class TokenRegApiView(APIView):
-    """View для авторизации по токену"""
+    """View для авторизации по токену."""
     def post(self, request):
         serializer = TokenRegSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
