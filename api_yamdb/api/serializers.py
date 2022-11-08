@@ -142,24 +142,26 @@ class ReviewSerializer(serializers.ModelSerializer):
         read_only=True,
         slug_field='username'
     )
-    score = serializers.IntegerField(validators=[
-        MinValueValidator(limit_value=settings.MIN_LIMIT_VALUE,
-                          message='Минимальное значение рейтинга - 1'),
-        MaxValueValidator(limit_value=settings.MAX_LIMIT_VALUE,
-                          message='Максимальное значение рейтинга - 10')
-    ])
+
+    def validate_score(self, score):
+        if not 1 <= score <= 10:
+            raise serializers.ValidationError(
+                'Оценка рейтинга - целое число в диапазоне от 1 до 10.'
+            )
+        return score
 
     def validate(self, data):
         """Валидация для отзывов и оценок"""
-        request = self.context['request']
-        author = request.user
-        title_id = self.context.get('view').kwargs.get('title_id')
-        title = get_object_or_404(Title, pk=title_id)
-        if (
-            request.method == 'POST'
-            and Review.objects.filter(title=title, author=author).exists()
-        ):
-            raise ValidationError('Может существовать только один отзыв!')
+        if self.context['request'].method != 'POST':
+            return data
+
+        author = self.context['request'].user
+        title_id = self.context['request'].parser_context['kwargs'].get['title_id']
+        if Review.objects.filter(
+                author=author, title=title_id).exists():
+            raise serializers.ValidationError(
+                'Может существовать только один отзыв!'
+            )
         return data
 
     class Meta:
