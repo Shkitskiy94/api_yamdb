@@ -2,6 +2,8 @@ import datetime as dt
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
 from reviews.models import Category, Comments, Genre, Review, Title
@@ -140,7 +142,7 @@ class ReviewSerializer(serializers.ModelSerializer):
         read_only=True,
         slug_field='username'
     )
-
+    
     def validate_score(self, score):
         if not 1 <= score <= 10:
             raise serializers.ValidationError(
@@ -154,7 +156,9 @@ class ReviewSerializer(serializers.ModelSerializer):
             return data
 
         author = self.context['request'].user
-        title_id = self.context['request'].parser_context['kwargs'].get['title_id']
+        title_id = (self.context['request'].
+                    parser_context['kwargs']['title_id']
+                )
 
         if Review.objects.filter(
                 author=author, title=title_id).exists():
