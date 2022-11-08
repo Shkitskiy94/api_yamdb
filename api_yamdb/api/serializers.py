@@ -149,7 +149,7 @@ class ReviewSerializer(serializers.ModelSerializer):
     def validate_score(self, score):
         if not 1 <= score <= 10:
             raise serializers.ValidationError(
-                'Оценка рейтинга - целое число в диапазоне от 1 до 10.'
+                'Оценка рейтинга - это целое число в диапазоне от 1 до 10.'
             )
         return score
 
