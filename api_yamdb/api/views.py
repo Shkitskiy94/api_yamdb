@@ -32,16 +32,12 @@ def signup(request):
     Ограничения по пермишенам (для всех доступно)"""
     serializer = SignUpSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
-    try:
-        username = serializer.validated_data.get('username')
-        email = serializer.validated_data.get('email')
-        user, _ = User.objects.get_or_create(
-            username=username,
-            email=email
-        )
-    except IntegrityError:
-        return Response('Это имя или email уже занято',
-                        status.HTTP_400_BAD_REQUEST)
+    username = serializer.validated_data.get('username')
+    email = serializer.validated_data.get('email')
+    user, _ = User.objects.get_or_create(
+        username=username,
+        email=email
+    )
     code = default_token_generator.make_token(user)
     send_mail(
         'Код токена',

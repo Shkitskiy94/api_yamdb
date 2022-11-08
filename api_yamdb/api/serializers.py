@@ -25,8 +25,13 @@ class SignUpSerializer(serializers.Serializer):
 
     def validate_username(self, value):
         if value == 'me':
-            raise ValidationError(
+            raise serializers.ValidationError(
                 'Запрещено использовать "me" в качестве имени пользователя'
+            )
+        elif User.objects.filter(username=value).exists():
+            raise serializers.ValidationError(
+                'Данный username (имя) занято, '
+                'используйте другое '
             )
 
         return value
@@ -156,7 +161,7 @@ class ReviewSerializer(serializers.ModelSerializer):
         author = self.context['request'].user
         title_id = (self.context['request'].
                     parser_context['kwargs']['title_id']
-                )
+                    )
 
         if Review.objects.filter(
                 author=author, title=title_id).exists():
