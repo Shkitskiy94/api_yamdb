@@ -2,8 +2,6 @@ import datetime as dt
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.core.validators import MaxValueValidator, MinValueValidator
-from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
 from reviews.models import Category, Comments, Genre, Review, Title
