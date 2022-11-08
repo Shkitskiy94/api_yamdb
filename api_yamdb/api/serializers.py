@@ -145,7 +145,7 @@ class ReviewSerializer(serializers.ModelSerializer):
         read_only=True,
         slug_field='username'
     )
-    
+
     def validate_score(self, score):
         if not 1 <= score <= 10:
             raise serializers.ValidationError(
